@@ -27,14 +27,9 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { CheckCircleIcon, ClockIcon ,ArrowUpTrayIcon,InformationCircleIcon } from '@heroicons/react/20/solid';
-// import Home from "../../../assets/tutor.png"
+import Home from "../../../assets/tutor.png"
 import Logo from "../../../assets/logo.png";
 import DashboardContent from "./DashboardContent";
-import Chats from "./Chats";
-import LiveLectures from "./live-lecture";
-import Calender from "./calender";
-import Essaygrading from "./essay-grading";
-import Explainers from "./explainers";
 
 // const navigation = [
 //   { name: 'Home', href: '#', icon: HomeIcon, current: true },
@@ -61,41 +56,41 @@ const navigation = [
     current: true,
     content: <DashboardContent />
   },
-  { 
-    name: 'Chat', 
-    href: '#', 
-    icon: UsersIcon, 
-    current: false,
-    content: <Chats />
-  },
-  // { 
-  //    name: 'Live lecture', 
-  //   href: '#', 
-  //   icon: FolderIcon, 
-  //   current: false,
-  //   content: <LiveLectures />
-  // },
-  // { 
-  //   name: 'Calendar', 
-  //   href: '#', 
-  //   icon: CalendarIcon, 
-  //   current: false,
-  //   content: <Calender />
-  // },
-  // { 
-  //   name: 'Essay Grading', 
-  //   href: '#', 
-  //   icon: DocumentDuplicateIcon, 
-  //   current: false,
-  //   content: <Essaygrading  />
-  // },
-  { 
-   name: 'Explainers', 
-    href: '#', 
-    icon: ChartPieIcon, 
-    current: false,
-    content: <Explainers />
-  },
+//   { 
+//     name: 'Chat', 
+//     href: '#', 
+//     icon: UsersIcon, 
+//     current: false,
+//     content: <TeamContent />
+//   },
+//   { 
+//      name: 'Live lecture', 
+//     href: '#', 
+//     icon: FolderIcon, 
+//     current: false,
+//     content: <ProjectsContent />
+//   },
+//   { 
+//     name: 'Calendar', 
+//     href: '#', 
+//     icon: CalendarIcon, 
+//     current: false,
+//     content: <CalendarContent />
+//   },
+//   { 
+//     name: 'Essay Grading', 
+//     href: '#', 
+//     icon: DocumentDuplicateIcon, 
+//     current: false,
+//     content: <DocumentsContent />
+//   },
+//   { 
+//    name: 'Explainers', 
+//     href: '#', 
+//     icon: ChartPieIcon, 
+//     current: false,
+//     content: <ReportsContent />
+//   },
 ]
 
 const teams = [
@@ -132,7 +127,7 @@ export default function Example() {
         <Dialog open={sidebarOpen} onClose={setSidebarOpen} className="relative z-50 lg:hidden">
           <DialogBackdrop
             transition
-            className="fixed inset-0 bg-white transition-opacity duration-300 ease-linear data-closed:opacity-0"
+            className="fixed inset-0 bg-gray-900/80 transition-opacity duration-300 ease-linear data-closed:opacity-0"
           />
 
           <div className="fixed inset-0 flex">
@@ -230,11 +225,11 @@ export default function Example() {
         </Dialog>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden bg-[#fff] ring-1 ring-white/10 lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div className="hidden bg-gray-900 ring-1 ring-white/10 lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto  px-6 pb-4 border-r border-gray-200">
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-black/10 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
-              <img 
+              <img
                 alt="Your Company"
                 src={Logo}
                 className="h-8 w-auto"
@@ -335,13 +330,13 @@ export default function Example() {
                 /> */}
               </form>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
-                {/* <button
+                <button
                         type="button"
                         className="inline-flex items-center gap-x-1.5 rounded-md border border-green-300 px-3 py-2 text-sm font-semibold text-green-600  hover:border-green-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 bg-transparent"
                         >
                         <ShareIcon aria-hidden="true" className="-ml-0.5 size-5 text-green-600" />
                         Share
-                  </button> */}
+                        </button>
  
                  <button
                         type="button"
@@ -350,13 +345,13 @@ export default function Example() {
                         <ArrowUpTrayIcon aria-hidden="true" className="-ml-0.5 size-5" />
                         Upgrade
                     </button>
-                 {/* <button
+                 <button
                         type="button"
                         className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                         <InformationCircleIcon aria-hidden="true" className="-ml-0.5 size-5" />
                         Feedback
-                    </button> */}
+                    </button>
                
                <button
                 type="button"

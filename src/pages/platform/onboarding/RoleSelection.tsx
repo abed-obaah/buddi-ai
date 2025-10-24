@@ -51,7 +51,7 @@ export default function RoleSelection() {
 </div>
       <div className="w-full max-w-6xl">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">
-          How will you use StudyBuddy?
+          How will you use Edgio?
         </h1>
         <p className="text-center text-lg text-gray-500 mb-12">
           This helps us personalize your experience

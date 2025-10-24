@@ -764,7 +764,7 @@ export default function RoleSelection() {
       </div>
     </div>
   </div>
-</div>;
+</div>
 
   );
 }

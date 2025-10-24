@@ -2,6 +2,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import SignUp from './pages/auth/signup';
+import SignIn from './pages/auth/signin';
 import Onboarding from './pages/platform/onboarding';
 import LanguageSelector from './pages/platform/onboarding/LanguageSelector';
 import Role from './pages/platform/onboarding/RoleSelection';
@@ -19,6 +20,7 @@ function App() {
       <Route path="/" element={<Home />} />
       {/* <Route path="/about" element={<About />} /> */}
       <Route path="/auth/signup" element={<SignUp/>} />
+      <Route path="/auth/signin" element={<SignIn/>} />
       <Route path="/platform/onboarding" element={<Onboarding/>} />
       <Route path="/platform/language_selection" element={<LanguageSelector/>} />
       <Route path="/platform/Role" element={<Role />} />

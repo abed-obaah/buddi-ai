@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import panda from "../../assets/20251011_0510_image.png";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom";
+import logo from '../../assets/logo.png'
 
 export default function CreateAccount() {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
@@ -12,13 +12,12 @@ export default function CreateAccount() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const navigate = useNavigate();
-  
+   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
-    navigate("/signin");
+    navigate("/platform/dashboard");
   };
 
   return (
@@ -27,18 +26,19 @@ export default function CreateAccount() {
 
         {/* Left Section */}
         <div className="w-full md:w-1/2 flex flex-col justify-center px-6 sm:px-10 md:px-16 lg:px-20 2xl:px-28 py-10 bg-white">
-          <img
-            src="/logo.png"
-            alt="Skill Afrika logo"
-            className="w-32 md:w-40 2xl:w-52 mb-6"
-          />
+           <img
+                src={logo}
+                alt="Logo"
+                className="h-8 w-32 object-contain"
+              />
+
           <h2 className="text-3xl md:text-4xl 2xl:text-5xl font-bold mb-8 text-gray-800">
-            Create an account
+           Sign In
           </h2>
 
           <button className="flex items-center justify-center gap-3 border border-gray-300 py-3 2xl:py-4 rounded-lg font-medium hover:bg-gray-50 transition text-base 2xl:text-lg">
             <FcGoogle className="text-xl 2xl:text-2xl" />
-            Sign up with Google
+            Sign in with Google
           </button>
 
           <div className="flex items-center gap-3 my-6">
@@ -48,18 +48,7 @@ export default function CreateAccount() {
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5 2xl:gap-6">
-            <div>
-              <label className="block text-sm 2xl:text-base font-medium mb-1">Username</label>
-              <input
-                type="text"
-                name="username"
-                placeholder="e.g remeo.dsgn"
-                value={formData.username}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 2xl:py-4 focus:outline-none focus:ring-2 focus:ring-orange-500 text-base"
-              />
-              <p className="text-xs 2xl:text-sm text-gray-500 mt-1">This is your public display name</p>
-            </div>
+           
 
             <div>
               <label className="block text-sm 2xl:text-base font-medium mb-1">Email Address</label>
@@ -89,7 +78,7 @@ export default function CreateAccount() {
               type="submit"
               className="inline-block rounded-full bg-gradient-to-r from-[#CD2574] to-[#E46708] px-10 md:px-12 py-4 2xl:py-5 font-medium text-white shadow-sm hover:from-[#E46708] hover:to-[#CD2574] focus:ring-2 focus:ring-orange-300 focus:ring-offset-2 focus:outline-none text-lg 2xl:text-xl"
             >
-              Create account
+              Sign In
             </button>
           </form>
 
@@ -100,8 +89,9 @@ export default function CreateAccount() {
           </p>
 
           <p className="text-sm 2xl:text-base mt-4">
-            Already have an account?{' '}
-            <a href="#" className="text-orange-500 font-medium hover:underline">Login</a>
+            Don't have an account?{' '}
+            <Link
+              to="/signup" href="#" className="text-orange-500 font-medium hover:underline">Sign up</Link>
           </p>
         </div>
 
@@ -115,8 +105,8 @@ export default function CreateAccount() {
             />
             <div className="absolute bottom-8 left-8 right-8 text-white drop-shadow-lg">
               <h3 className="text-xl md:text-2xl 2xl:text-3xl font-semibold leading-snug">
-                Empowering the future of{' '}
-                <span className="text-orange-500">Africans</span>
+                Achieve your academic goals with {' '}
+                <span className="text-orange-500">learning paths,interactive</span>
               </h3>
             </div>
           </div>

@@ -86,7 +86,7 @@ const StudyFetchLanding = () => {
                                   </div>
                                   <div className="flex flex-col gap-4">
                                     <h1 className="text-3xl font-semibold text-[#3c315b] dark:text-[#3c315b]">
-                                      Welcome to StudyBuddy!
+                                      Welcome to Edgio!
                                     </h1>
                                     <p className="text-sm lg:text-base text-gray-500 dark:text-gray-400 leading-relaxed">
                                       Transform your class materials into

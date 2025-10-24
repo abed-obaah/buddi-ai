@@ -149,7 +149,7 @@ export default function RoleSelection() {
                                         />
                                       </div>
                                       <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                                        How did you hear about StudyBuddy?
+                                        How did you hear about Edgio?
                                       </h1>
                                       <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">
                                         This helps us understand how to reach

@@ -5,7 +5,7 @@ import { AiFillAudio } from "react-icons/ai";
 
 export default function BuddyUI() {
   return (
-    <div className="relative min-h-screen bg-white flex items-center justify-center">
+    <div className="relative min-h-screen flex items-center justify-center">
       {/* Enhanced Bottom Overlay */}
      <div className="absolute bottom-0 w-[500px] h-[300px] bg-gradient-to-t from-white via-white/100 to-white/30 z-20" />
 
