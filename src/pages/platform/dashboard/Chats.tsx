@@ -25,13 +25,14 @@ import {
   AcademicCapIcon,
   ShareIcon
 } from '@heroicons/react/24/outline'
-import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+import { ChevronDownIcon, MagnifyingGlassIcon, PaperAirplaneIcon } from '@heroicons/react/20/solid'
 import { CheckCircleIcon, ClockIcon, ArrowUpTrayIcon, InformationCircleIcon } from '@heroicons/react/20/solid';
 import panda from '../../../assets/panda.png'
 
 export default function DashboardContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [message, setMessage] = useState(''); // Add state for message input
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -46,117 +47,34 @@ export default function DashboardContent() {
     };
   }, []);
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (message.trim()) {
+      // Handle message submission here
+      console.log('Sending message:', message);
+      setMessage(''); // Clear input after sending
+    }
+  };
+
   return (
     <>
-      <div className="h-screen flex flex-col md:flex-row overflow-hidden bg-white dark:bg-dark">
-        {/* Mobile sidebar toggle */}
-        <div className="md:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-md text-gray-700 dark:text-gray-300"
-          >
-            <Bars3Icon className="h-6 w-6" />
-          </button>
-          {/* <div className="flex items-center">
-            <img
-              src="/_next/image?url=%2Ficons%2Fplatform%2Fchat.png&w=256&q=100"
-              alt="Chat"
-              className="h-8 w-8"
-            />
-            <span className="ml-2 text-lg font-semibold text-primary dark:text-black">
-              New Chat Session
-            </span>
-          </div> */}
-          <div className="w-6" />
-        </div>
-
-        {/* Sidebar for mobile */}
-        <Dialog
-          as="div"
-          className="md:hidden"
-          open={sidebarOpen}
-          onClose={setSidebarOpen}
-        >
-          <DialogBackdrop className="fixed inset-0 z-40 bg-gray-900 bg-opacity-75 transition-opacity" />
-          <DialogPanel className="fixed inset-y-0 left-0 z-50 w-full max-w-xs bg-white dark:bg-dark p-4 transform transition-transform">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-primary dark:text-white">Menu</h2>
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="p-2 rounded-md text-gray-700 dark:text-gray-300"
-              >
-                <XMarkIcon className="h-6 w-6" />
-              </button>
-            </div>
-            {/* Sidebar content would go here */}
-            <div className="space-y-4">
-              <div className="p-2 rounded-md bg-gray-100 dark:bg-dark2 text-gray-700 dark:text-gray-300">
-                Chat History
-              </div>
-              {/* Add other sidebar items as needed */}
-            </div>
-          </DialogPanel>
-        </Dialog>
-
+      <div className="flex flex-col md:flex-row overflow-hidden bg-white dark:bg-dark">
         {/* Main content */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Top navigation for desktop */}
-          <nav className="hidden md:flex items-center px-4 py-2 bg-white dark:bg-dark border-b border-gray-200 dark:border-gray-700">
-            <div className="flex-1 flex items-center">
-              {/* <div className="flex items-center">
-                <img
-                  src="/_next/image?url=%2Ficons%2Fplatform%2Fchat.png&w=256&q=100"
-                  alt="Chat"
-                  className="h-6 w-6"
-                />
-                <span className="ml-2 text-base font-semibold text-primary dark:text-black">
-                  New Chat Session
-                </span>
-              </div> */}
-              <div className="ml-4">
-                <button
-                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300 rounded-md border border-gray-200 dark:border-primary hover:bg-gray-50 dark:hover:bg-dark2"
-                  aria-expanded="false"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={14}
-                    height={14}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-history"
-                  >
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                    <path d="M3 3v5h5" />
-                    <path d="M12 7v5l4 2" />
-                  </svg>
-                  <span>Chat History</span>
-                  <ChevronDownIcon className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </nav>
-
           {/* Chat content */}
           <div className="flex-1 overflow-y-auto p-4">
             <div className="max-w-4xl mx-auto w-full">
               <div className="text-center mb-6">
                 <div className="flex justify-center">
- <img
-  alt="Spark.E"
-  loading="lazy"
-  width={250}
-  height={250}
-  decoding="async"
-  className="w-60 h-60 md:w-72 md:h-72"
-  src={panda}
-/>
-
-
+                  <img
+                    alt="Spark.E"
+                    loading="lazy"
+                    width={250}
+                    height={250}
+                    decoding="async"
+                    className="w-60 h-60 md:w-72 md:h-72"
+                    src={panda}
+                  />
                 </div>
                 <div className="flex flex-col items-center justify-center py-1 gap-2 mt-2">
                   <div className="flex flex-wrap justify-center gap-2">
@@ -227,33 +145,46 @@ export default function DashboardContent() {
 
               {/* Input area */}
               <div className="mt-20">
-                <form className="w-full">
+                <form onSubmit={handleSubmit} className="w-full">
                   <div className="flex flex-col bg-white dark:bg-dark2 border border-gray-300 dark:border-[#2D2D2D] rounded-2xl">
                     <div className="flex items-center">
                       <textarea
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                         className="flex-1 p-3 text-sm dark:text-black text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none resize-none max-h-32 min-h-[44px]"
                         placeholder="Ask your AI tutor anything..."
                         style={{ height: '45px' }}
                       />
-                      <button
-                        type="submit"
-                        className="flex items-center justify-center mr-2 p-1 rounded-full bg-blue text-white hover:bg-blue2 transition-colors duration-200 ease-in-out"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={18}
-                          height={18}
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
+                      {/* Send button - shows when user types */}
+                      {message.trim() ? (
+                        <button
+                          type="submit"
+                          className="flex items-center justify-center mr-2 p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 ease-in-out"
                         >
-                          <path d="m5 12 7-7 7 7" />
-                          <path d="M12 19V5" />
-                        </svg>
-                      </button>
+                          <PaperAirplaneIcon className="w-4 h-4 transform rotate-45" />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="flex items-center justify-center mr-2 p-1 rounded-full bg-gray-300 text-gray-500 cursor-not-allowed transition-colors duration-200 ease-in-out"
+                          disabled
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width={18}
+                            height={18}
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="m5 12 7-7 7 7" />
+                            <path d="M12 19V5" />
+                          </svg>
+                        </button>
+                      )}
                     </div>
                     <div className="flex flex-wrap items-center p-2 pt-0 gap-2">
                       <label
