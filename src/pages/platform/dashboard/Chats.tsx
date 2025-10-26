@@ -42,7 +42,11 @@ export default function DashboardContent() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -51,9 +55,39 @@ export default function DashboardContent() {
     
     checkIsMobile();
     window.addEventListener('resize', checkIsMobile);
+
+    // Check if speech recognition is supported
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      setSpeechSupported(false);
+    } else {
+      // Initialize speech recognition
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setMessage(prev => prev + ' ' + transcript);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
     
     return () => {
       window.removeEventListener('resize', checkIsMobile);
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
     };
   }, []);
 
@@ -63,6 +97,58 @@ export default function DashboardContent() {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const startListening = () => {
+    if (!speechSupported) {
+      alert('Speech recognition is not supported in your browser. Please use Chrome, Edge, or Safari.');
+      return;
+    }
+
+    if (recognitionRef.current) {
+      setIsListening(true);
+      recognitionRef.current.start();
+    }
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+  };
+
+  const speakText = (text: string) => {
+    if ('speechSynthesis' in window) {
+      setIsSpeaking(true);
+      
+      // Stop any ongoing speech
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      utterance.volume = 0.8;
+
+      utterance.onend = () => {
+        setIsSpeaking(false);
+      };
+
+      utterance.onerror = () => {
+        setIsSpeaking(false);
+      };
+
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Text-to-speech is not supported in your browser.');
+    }
+  };
+
+  const stopSpeaking = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
   };
 
   const simulateAIResponse = async (userMessage: string): Promise<string> => {
@@ -293,7 +379,28 @@ export default function DashboardContent() {
                               : 'bg-gray-100 dark:bg-dark2 text-black dark:text-gray-600 rounded-bl-none'
                           }`}
                         >
-                          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                          <div className="flex items-start justify-between gap-2">
+                            <p className="text-sm whitespace-pre-wrap flex-1">{msg.content}</p>
+                            {!msg.isUser && (
+                              <button
+                                onClick={() => isSpeaking ? stopSpeaking() : speakText(msg.content)}
+                                className={`flex-shrink-0 p-1 rounded-full transition-colors ${
+                                  isSpeaking ? 'bg-red-100 text-red-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                                }`}
+                                title={isSpeaking ? 'Stop speaking' : 'Read aloud'}
+                              >
+                                {isSpeaking ? (
+                                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                  </svg>
+                                ) : (
+                                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.784L4.925 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.925l3.458-2.784a1 1 0 011.617.784zm5.274 4.21a1 1 0 011.414 0 5 5 0 010 7.072 1 1 0 11-1.414-1.414 3 3 0 000-4.244 1 1 0 010-1.414z" clipRule="evenodd" />
+                                  </svg>
+                                )}
+                              </button>
+                            )}
+                          </div>
                           <p className={`text-xs mt-1 ${msg.isUser ? 'text-blue-100' : 'text-gray-500'}`}>
                             {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </p>
@@ -334,6 +441,30 @@ export default function DashboardContent() {
                           }
                         }}
                       />
+                      
+                      {/* Voice input button */}
+                      <button
+                        type="button"
+                        onClick={isListening ? stopListening : startListening}
+                        className={`mr-2 p-2 rounded-full transition-colors duration-200 ${
+                          isListening 
+                            ? 'bg-red-500 text-white animate-pulse' 
+                            : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                        } ${!speechSupported ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={!speechSupported}
+                        title={isListening ? 'Stop listening' : 'Start voice input'}
+                      >
+                        {isListening ? (
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        ) : (
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </button>
+
                       {/* Send button - shows when user types */}
                       {message.trim() ? (
                         <button
@@ -456,6 +587,14 @@ export default function DashboardContent() {
                           <span className="text-blue text-[.6rem]">Select Materials</span>
                         </button>
                       </div>
+                      
+                      {/* Voice status indicator */}
+                      {(isListening || isSpeaking) && (
+                        <div className="flex items-center gap-1 text-xs text-gray-500">
+                          <div className={`w-2 h-2 rounded-full ${isListening ? 'bg-red-500 animate-pulse' : 'bg-blue-500'}`}></div>
+                          <span>{isListening ? 'Listening...' : 'Speaking...'}</span>
+                        </div>
+                      )}
                       
                       <button
                         className="p-1 rounded-md transition-all ease-in-out duration-200 hover:bg-gray-100 dark:hover:bg-dark2 ml-auto"
