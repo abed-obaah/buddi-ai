@@ -360,7 +360,7 @@ export default function Example() {
                
                <button
                 type="button"
-                onClick={() => setOpen(!open)}
+                // onClick={() => setOpen(!open)}
                 className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
             >
                 <span className="sr-only">View notifications</span>

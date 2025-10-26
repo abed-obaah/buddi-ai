@@ -157,7 +157,7 @@ export default function DashboardContent() {
                                             aria-busy="false"
                                             className="px-2 py-1 text-[.65rem] min-h-[32px] group relative rounded-lg whitespace-nowrap transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed text-center select-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-800 focus:ring-gray-500 dark:focus:ring-gray-400 focus:ring-offset-white dark:focus:ring-offset-gray-900 inline-flex gap-2 justify-center items-center"
                                             aria-disabled="false"
-                                            href="/platform/studyset/68740f753d4c0af656ec96d8/knowledge"
+                                            href="#"
                                           >
                                             <svg
                                               xmlns="http://www.w3.org/2000/svg"
@@ -188,7 +188,7 @@ export default function DashboardContent() {
                                             aria-busy="false"
                                             className="px-2 py-1 text-[.65rem] min-h-[32px] group relative rounded-lg whitespace-nowrap transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed text-center select-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-800 focus:ring-gray-500 dark:focus:ring-gray-400 focus:ring-offset-white dark:focus:ring-offset-gray-900 inline-flex gap-2 justify-center items-center"
                                             aria-disabled="false"
-                                            href="/platform/gameProfile"
+                                            href="#"
                                           >
                                             <svg
                                               xmlns="http://www.w3.org/2000/svg"
