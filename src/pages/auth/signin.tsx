@@ -1,18 +1,14 @@
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import panda from "../../assets/20251011_0510_image.png";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import logo from '../../assets/logo.png'
+import { useNavigate, Link } from "react-router-dom";
+import logo from '../../assets/logo.png';
 
-export default function CreateAccount() {
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+export default function SignIn() {
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-   const navigate = useNavigate();
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,17 +22,18 @@ export default function CreateAccount() {
 
         {/* Left Section */}
         <div className="w-full md:w-1/2 flex flex-col justify-center px-6 sm:px-10 md:px-16 lg:px-20 2xl:px-28 py-10 bg-white">
-           <img
-                src={logo}
-                alt="Logo"
-                className="h-8 w-32 object-contain"
-              />
+          {/* Logo centered on mobile, left-aligned on desktop */}
+          <img
+            src={logo}
+            alt="Logo"
+            className="h-8 w-32 object-contain mx-auto md:mx-0 mb-2"
+          />
 
-          <h2 className="text-3xl md:text-4xl 2xl:text-5xl font-bold mb-8 text-gray-800">
-           Sign In
+          <h2 className="text-3xl md:text-4xl 2xl:text-5xl font-bold mb-8 text-gray-800 text-center md:text-left">
+            Sign In
           </h2>
 
-          <button className="flex items-center justify-center gap-3 border border-gray-300 py-3 2xl:py-4 rounded-lg font-medium hover:bg-gray-50 transition text-base 2xl:text-lg">
+          <button className="flex items-center justify-center gap-3 border border-gray-300 py-3 2xl:py-4 rounded-lg font-medium hover:bg-gray-50 transition text-base 2xl:text-lg mb-6">
             <FcGoogle className="text-xl 2xl:text-2xl" />
             Sign in with Google
           </button>
@@ -48,8 +45,6 @@ export default function CreateAccount() {
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5 2xl:gap-6">
-           
-
             <div>
               <label className="block text-sm 2xl:text-base font-medium mb-1">Email Address</label>
               <input
@@ -82,16 +77,20 @@ export default function CreateAccount() {
             </button>
           </form>
 
-          <p className="text-sm 2xl:text-base text-gray-500 mt-4">
-            By creating an account, you agree to our{' '}
+          <p className="text-sm 2xl:text-base text-gray-500 mt-4 text-center md:text-left">
+            By signing in, you agree to our{' '}
             <a href="#" className="text-orange-500 hover:underline">terms of services</a> and{' '}
             <a href="#" className="text-orange-500 hover:underline">privacy policy</a>.
           </p>
 
-          <p className="text-sm 2xl:text-base mt-4">
+          <p className="text-sm 2xl:text-base mt-4 text-center md:text-left">
             Don't have an account?{' '}
             <Link
-              to="/signup" href="#" className="text-orange-500 font-medium hover:underline">Sign up</Link>
+              to="/signup"
+              className="text-orange-500 font-medium hover:underline"
+            >
+              Sign up
+            </Link>
           </p>
         </div>
 
@@ -105,8 +104,8 @@ export default function CreateAccount() {
             />
             <div className="absolute bottom-8 left-8 right-8 text-white drop-shadow-lg">
               <h3 className="text-xl md:text-2xl 2xl:text-3xl font-semibold leading-snug">
-                Achieve your academic goals with {' '}
-                <span className="text-orange-500">learning paths,interactive</span>
+                Achieve your academic goals with{' '}
+                <span className="text-orange-500">learning paths, interactive</span>
               </h3>
             </div>
           </div>

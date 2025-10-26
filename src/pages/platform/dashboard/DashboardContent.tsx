@@ -150,7 +150,7 @@ export default function DashboardContent() {
                                           </a>
                                         </div>
                                         <p className="text-xs text-gray-800 dark:text-gray-600 mb-2">
-                                         Welcome to StudyFetch! This is your first study set. You can add materials, create flashcards, and start learning!
+                                         Welcome to Edgio This is your first study set. You can add materials, create flashcards, and start learning!
                                         </p>
                                         <div className="flex flex-wrap items-center gap-1.5">
                                           <a
