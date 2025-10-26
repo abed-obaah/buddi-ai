@@ -1,5 +1,5 @@
 import React from "react";
-import buddyImg from "../assets/buddy.png";
+import buddyImg from "../assets/Buddy.png";
 import { LuUpload } from "react-icons/lu";
 import { AiFillAudio } from "react-icons/ai";
 
