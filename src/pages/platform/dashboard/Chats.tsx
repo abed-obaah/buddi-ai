@@ -73,9 +73,9 @@ export default function DashboardContent() {
         
         // Check if the transcript contains greetings directed at Joya
         const lowerTranscript = transcript.toLowerCase();
-        if (lowerTranscript.includes('hi joya') || 
-            lowerTranscript.includes('hello joya') || 
-            lowerTranscript.includes('hey joya') ||
+        if (lowerTranscript.includes('hi') || 
+            lowerTranscript.includes('hello') || 
+            lowerTranscript.includes('hey') ||
             lowerTranscript.includes('hiya joya')) {
           
           // Auto-submit after a short delay to make it feel natural
