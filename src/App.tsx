@@ -1,7 +1,5 @@
-// App.jsx
 import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-
+import Home from './pages/Homes';
 import SignUp from './pages/auth/signup';
 import SignIn from './pages/auth/signin';
 import Onboarding from './pages/platform/onboarding';
