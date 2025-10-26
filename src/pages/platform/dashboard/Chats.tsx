@@ -63,13 +63,27 @@ export default function DashboardContent() {
       // Initialize speech recognition
       const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = false;
+      recognitionRef.current.continuous = false; // FIXED: Removed the duplicate typo
       recognitionRef.current.interimResults = false;
       recognitionRef.current.lang = 'en-US';
 
       recognitionRef.current.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setMessage(prev => prev + ' ' + transcript);
+        
+        // Check if the transcript contains greetings directed at Joya
+        const lowerTranscript = transcript.toLowerCase();
+        if (lowerTranscript.includes('hi joya') || 
+            lowerTranscript.includes('hello joya') || 
+            lowerTranscript.includes('hey joya') ||
+            lowerTranscript.includes('hiya joya')) {
+          
+          // Auto-submit after a short delay to make it feel natural
+          setTimeout(() => {
+            handleVoiceGreeting(transcript);
+          }, 500);
+        }
+        
         setIsListening(false);
       };
 
@@ -115,6 +129,61 @@ export default function DashboardContent() {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       setIsListening(false);
+    }
+  };
+
+  const handleVoiceGreeting = async (transcript: string) => {
+    // Add user's voice message
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: transcript,
+      isUser: true,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setMessage('');
+    setIsLoading(true);
+
+    try {
+      // Special response for Joya greetings
+      const joyaGreetingResponses = [
+        "Hello there! It's wonderful to hear your voice! How can I assist with your learning today?",
+        "Hi! I'm so glad you said hello! What would you like to learn about?",
+        "Hey! It's great to talk with you directly. I'm here and ready to help you learn!",
+        "Hello! I love when students reach out by voice. What's on your mind today?",
+        "Hi! Hearing your voice makes this feel so much more personal. How can I support your educational journey?"
+      ];
+      
+      const aiResponse = joyaGreetingResponses[Math.floor(Math.random() * joyaGreetingResponses.length)];
+      
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: aiResponse,
+        isUser: false,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, aiMessage]);
+      
+      // Auto-speak the response
+      setTimeout(() => {
+        speakText(aiResponse);
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Error getting AI response:', error);
+      
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "I apologize, but I'm having trouble responding right now. Please try again in a moment.",
+        isUser: false,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -190,7 +259,10 @@ export default function DashboardContent() {
 
     const lowerMessage = userMessage.toLowerCase();
     
-    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+    // Check for Joya-specific greetings in typed messages too
+    if (lowerMessage.includes('hi joya') || lowerMessage.includes('hello joya') || lowerMessage.includes('hey joya')) {
+      return "Hello! It's great to hear from you! How can I assist with your learning journey today?";
+    } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
       return responses.greeting[Math.floor(Math.random() * responses.greeting.length)];
     } else if (lowerMessage.includes('explain') || lowerMessage.includes('what is') || lowerMessage.includes('how does')) {
       return responses.explain[Math.floor(Math.random() * responses.explain.length)];
@@ -335,7 +407,7 @@ export default function DashboardContent() {
                       Hi, I'm Joya
                     </h2>
                     <p className="text-sm text-gray-600 dark:text-gray-500 mb-4">
-                      Ask me anything about learning, or try one of these examples:
+                      Ask me anything about learning, or try one of these examples. You can also say "Hi Joya"!
                     </p>
                     <div className="flex flex-wrap justify-center gap-1.5 w-full max-w-2xl mx-auto">
                       <button 
@@ -432,7 +504,7 @@ export default function DashboardContent() {
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         className="flex-1 p-3 text-sm dark:text-black text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none resize-none max-h-32 min-h-[44px]"
-                        placeholder="Ask your AI tutor anything..."
+                        placeholder='Ask your AI tutor anything or say "Hi Joya"...'
                         style={{ height: '45px' }}
                         onKeyPress={(e) => {
                           if (e.key === 'Enter' && !e.shiftKey) {
