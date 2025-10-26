@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Dialog,
   DialogBackdrop,
@@ -29,10 +29,20 @@ import { ChevronDownIcon, MagnifyingGlassIcon, PaperAirplaneIcon } from '@heroic
 import { CheckCircleIcon, ClockIcon, ArrowUpTrayIcon, InformationCircleIcon } from '@heroicons/react/20/solid';
 import panda from '../../../assets/panda.png'
 
+interface Message {
+  id: string;
+  content: string;
+  isUser: boolean;
+  timestamp: Date;
+}
+
 export default function DashboardContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [message, setMessage] = useState(''); // Add state for message input
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -47,13 +57,123 @@ export default function DashboardContent() {
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (message.trim()) {
-      // Handle message submission here
-      console.log('Sending message:', message);
-      setMessage(''); // Clear input after sending
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const simulateAIResponse = async (userMessage: string): Promise<string> => {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+    
+    const responses = {
+      greeting: [
+        "Hello! I'm Joya, your AI learning assistant. How can I help you with your studies today?",
+        "Hi there! I'm excited to help you learn. What would you like to explore?",
+        "Welcome! I'm Joya, ready to assist with your educational journey. What's on your mind?"
+      ],
+      explain: [
+        "I'd be happy to explain that concept! Could you provide more specific details about what you'd like me to clarify?",
+        "That's a great topic! Let me break it down for you in simple terms.",
+        "I can definitely help explain that. Here's a comprehensive overview..."
+      ],
+      summarize: [
+        "I can help summarize that content for you. Please share the material you'd like me to condense.",
+        "Summarization is one of my strengths! I'll extract the key points and main ideas for you.",
+        "Let me create a concise summary highlighting the most important information."
+      ],
+      citations: [
+        "I can help you find relevant academic citations for your research. What specific topic are you working on?",
+        "Finding credible sources is crucial! Let me search through academic databases for you.",
+        "I'll help you locate proper citations and references for your academic work."
+      ],
+      study: [
+        "I can suggest effective study techniques based on proven learning strategies. What subject are you studying?",
+        "Let me share some powerful study methods that can improve your retention and understanding.",
+        "Based on cognitive science principles, here are some study techniques that might work well for you..."
+      ],
+      default: [
+        "That's an interesting question! As your learning assistant, I can help explain concepts, summarize materials, find citations, or suggest study techniques. Which would you like to explore?",
+        "I'm here to support your learning journey! I can assist with explanations, summaries, research, or study strategies. How can I help you specifically?",
+        "Great question! I'd love to help you learn more effectively. Could you tell me what specific area you'd like assistance with?"
+      ]
+    };
+
+    const lowerMessage = userMessage.toLowerCase();
+    
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+      return responses.greeting[Math.floor(Math.random() * responses.greeting.length)];
+    } else if (lowerMessage.includes('explain') || lowerMessage.includes('what is') || lowerMessage.includes('how does')) {
+      return responses.explain[Math.floor(Math.random() * responses.explain.length)];
+    } else if (lowerMessage.includes('summar') || lowerMessage.includes('brief') || lowerMessage.includes('overview')) {
+      return responses.summarize[Math.floor(Math.random() * responses.summarize.length)];
+    } else if (lowerMessage.includes('citation') || lowerMessage.includes('source') || lowerMessage.includes('reference')) {
+      return responses.citations[Math.floor(Math.random() * responses.citations.length)];
+    } else if (lowerMessage.includes('study') || lowerMessage.includes('learn') || lowerMessage.includes('technique')) {
+      return responses.study[Math.floor(Math.random() * responses.study.length)];
+    } else {
+      return responses.default[Math.floor(Math.random() * responses.default.length)];
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+
+    // Add user message
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: message.trim(),
+      isUser: true,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setMessage('');
+    setIsLoading(true);
+
+    try {
+      // Simulate AI response
+      const aiResponse = await simulateAIResponse(message);
+      
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: aiResponse,
+        isUser: false,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('Error getting AI response:', error);
+      
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "I apologize, but I'm having trouble responding right now. Please try again in a moment.",
+        isUser: false,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleQuickAction = (action: string) => {
+    const quickMessage = action;
+    setMessage(quickMessage);
+    // Auto-submit after a brief delay to show the user what's happening
+    setTimeout(() => {
+      const submitEvent = new Event('submit', { cancelable: true });
+      const form = document.querySelector('form');
+      if (form) {
+        form.dispatchEvent(submitEvent);
+      }
+    }, 100);
   };
 
   return (
@@ -64,87 +184,140 @@ export default function DashboardContent() {
           {/* Chat content */}
           <div className="flex-1 overflow-y-auto p-4">
             <div className="max-w-4xl mx-auto w-full">
-              <div className="text-center mb-6">
-                <div className="flex justify-center">
-                  <img
-                    alt="Spark.E"
-                    loading="lazy"
-                    width={250}
-                    height={250}
-                    decoding="async"
-                    className="w-60 h-60 md:w-72 md:h-72"
-                    src={panda}
-                  />
-                </div>
-                <div className="flex flex-col items-center justify-center py-1 gap-2 mt-2">
-                  <div className="flex flex-wrap justify-center gap-2">
-                    <button className="group flex items-center gap-2 bg-[#F5F2FF] dark:bg-dark2 rounded-md px-3 py-1.5 text-xs md:text-sm text-primary dark:text-black hover:bg-purple transition-all duration-400">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={16}
-                        height={16}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="group-hover:animate-jiggle"
+              {/* Chat messages area */}
+              <div className="mb-6 min-h-[400px] max-h-[60vh] overflow-y-auto">
+                {messages.length === 0 ? (
+                  // Welcome screen - only show when no messages
+                  <div className="text-center mb-6">
+                    <div className="flex justify-center">
+                      <img
+                        alt="Spark.E"
+                        loading="lazy"
+                        width={250}
+                        height={250}
+                        decoding="async"
+                        className="w-60 h-60 md:w-72 md:h-72"
+                        src={panda}
+                      />
+                    </div>
+                    <div className="flex flex-col items-center justify-center py-1 gap-2 mt-2">
+                      <div className="flex flex-wrap justify-center gap-2">
+                        <button className="group flex items-center gap-2 bg-[#F5F2FF] dark:bg-dark2 rounded-md px-3 py-1.5 text-xs md:text-sm text-primary dark:text-black hover:bg-purple transition-all duration-400">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width={16}
+                            height={16}
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="group-hover:animate-jiggle"
+                          >
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3" />
+                            <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
+                            <path d="M3 16v3a2 2 0 0 0 2 2h3" />
+                            <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
+                          </svg>
+                          Personalities & Skillsets
+                        </button>
+                        <button className="group flex items-center gap-2 bg-[#F5F2FF] dark:bg-dark2 hover:bg-purple rounded-md px-3 py-1.5 text-xs md:text-sm text-primary dark:text-black transition-all duration-400">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width={16}
+                            height={16}
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="group-hover:animate-jiggle"
+                          >
+                            <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+                            <path d="M20 3v4" />
+                            <path d="M22 5h-4" />
+                            <path d="M4 17v2" />
+                            <path d="M5 18H3" />
+                          </svg>
+                          Scenarios
+                        </button>
+                      </div>
+                    </div>
+                    <h2 className="text-lg font-bold text-gray-800 dark:text-gray-600 mt-4">
+                      Hi, I'm Joya
+                    </h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-500 mb-4">
+                      Ask me anything about learning, or try one of these examples:
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-1.5 w-full max-w-2xl mx-auto">
+                      <button 
+                        onClick={() => handleQuickAction("Explain quantum physics")}
+                        className="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 bg-gray-50 text-gray-600 dark:bg-dark2/60 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark2 border border-gray-200 dark:border-gray-700/50"
                       >
-                        <path d="M8 3H5a2 2 0 0 0-2 2v3" />
-                        <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
-                        <path d="M3 16v3a2 2 0 0 0 2 2h3" />
-                        <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
-                      </svg>
-                      Personalities & Skillsets
-                    </button>
-                    <button className="group flex items-center gap-2 bg-[#F5F2FF] dark:bg-dark2 hover:bg-purple rounded-md px-3 py-1.5 text-xs md:text-sm text-primary dark:text-black transition-all duration-400">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={16}
-                        height={16}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="group-hover:animate-jiggle"
+                        Explain Concepts
+                      </button>
+                      <button 
+                        onClick={() => handleQuickAction("Summarize the key points of machine learning")}
+                        className="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 bg-gray-50 text-gray-600 dark:bg-dark2/60 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark2 border border-gray-200 dark:border-gray-700/50"
                       >
-                        <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
-                        <path d="M20 3v4" />
-                        <path d="M22 5h-4" />
-                        <path d="M4 17v2" />
-                        <path d="M5 18H3" />
-                      </svg>
-                      Scenarios
-                    </button>
+                        Summarize
+                      </button>
+                      <button 
+                        onClick={() => handleQuickAction("Find citations about climate change")}
+                        className="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 bg-gray-50 text-gray-600 dark:bg-dark2/60 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark2 border border-gray-200 dark:border-gray-700/50"
+                      >
+                        Find Citations
+                      </button>
+                      <button 
+                        onClick={() => handleQuickAction("What are effective study techniques?")}
+                        className="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 bg-gray-50 text-gray-600 dark:bg-dark2/60 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark2 border border-gray-200 dark:border-gray-700/50"
+                      >
+                        Study Techniques
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <h2 className="text-lg font-bold text-gray-800 dark:text-gray-600 mt-4">
-                  Hi, I'm Joya
-                </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-500 mb-4">
-                  Ask me anything about learning, or try one of these examples:
-                </p>
-                <div className="flex flex-wrap justify-center gap-1.5 w-full max-w-2xl mx-auto">
-                  <button className="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 bg-gray-50 text-gray-600 dark:bg-dark2/60 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark2 border border-gray-200 dark:border-gray-700/50">
-                    Explain Concepts
-                  </button>
-                  <button className="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 bg-gray-50 text-gray-600 dark:bg-dark2/60 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark2 border border-gray-200 dark:border-gray-700/50">
-                    Summarize
-                  </button>
-                  <button className="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 bg-gray-50 text-gray-600 dark:bg-dark2/60 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark2 border border-gray-200 dark:border-gray-700/50">
-                    Find Citations
-                  </button>
-                  <button className="px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 bg-gray-50 text-gray-600 dark:bg-dark2/60 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark2 border border-gray-200 dark:border-gray-700/50">
-                    Study Techniques
-                  </button>
-                </div>
+                ) : (
+                  // Chat messages
+                  <div className="space-y-4">
+                    {messages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div
+                          className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                            msg.isUser
+                              ? 'bg-blue-500 text-white rounded-br-none'
+                              : 'bg-gray-100 dark:bg-dark2 text-gray-800 dark:text-gray-200 rounded-bl-none'
+                          }`}
+                        >
+                          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                          <p className={`text-xs mt-1 ${msg.isUser ? 'text-blue-100' : 'text-gray-500'}`}>
+                            {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                    {isLoading && (
+                      <div className="flex justify-start">
+                        <div className="max-w-[80%] rounded-2xl rounded-bl-none bg-gray-100 dark:bg-dark2 px-4 py-2">
+                          <div className="flex space-x-2">
+                            <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"></div>
+                            <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                            <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div ref={messagesEndRef} />
+                  </div>
+                )}
               </div>
 
               {/* Input area */}
-              <div className="mt-20">
+              <div className="mt-8">
                 <form onSubmit={handleSubmit} className="w-full">
                   <div className="flex flex-col bg-white dark:bg-dark2 border border-gray-300 dark:border-[#2D2D2D] rounded-2xl">
                     <div className="flex items-center">
@@ -154,12 +327,19 @@ export default function DashboardContent() {
                         className="flex-1 p-3 text-sm dark:text-black text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none resize-none max-h-32 min-h-[44px]"
                         placeholder="Ask your AI tutor anything..."
                         style={{ height: '45px' }}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSubmit(e);
+                          }
+                        }}
                       />
                       {/* Send button - shows when user types */}
                       {message.trim() ? (
                         <button
                           type="submit"
-                          className="flex items-center justify-center mr-2 p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 ease-in-out"
+                          disabled={isLoading}
+                          className="flex items-center justify-center mr-2 p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <PaperAirplaneIcon className="w-4 h-4 transform rotate-45" />
                         </button>
