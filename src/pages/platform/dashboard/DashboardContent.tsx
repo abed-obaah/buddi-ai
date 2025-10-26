@@ -742,7 +742,7 @@ export default function DashboardContent() {
                                     </div>
                                   </div>
                                 </div> */}
-                                <div className="flex flex-wrap justify-center gap-8 p-8 min-h-screen">
+                                <div className="flex flex-wrap justify-center gap-8 p-2 ">
                                       <UploadCard />
                                       <PastQuestionsCard />
                                     </div>
