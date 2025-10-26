@@ -290,7 +290,7 @@ export default function DashboardContent() {
                           className={`max-w-[80%] rounded-2xl px-4 py-2 ${
                             msg.isUser
                               ? 'bg-blue-500 text-white rounded-br-none'
-                              : 'bg-gray-100 dark:bg-dark2 text-gray-800 dark:text-gray-200 rounded-bl-none'
+                              : 'bg-gray-100 dark:bg-dark2 text-black dark:text-gray-600 rounded-bl-none'
                           }`}
                         >
                           <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
