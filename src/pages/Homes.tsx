@@ -122,15 +122,15 @@ export default function Home() {
 
   return (
     <div className="bg-[#f2f5f8]">
-      <header className="fixed top-0 z-[500] w-full bg-gradient-to-r from-gray-100/50 via-gray-100/50 to-gray-100/50 backdrop-blur-md supports-[backdrop-filter]:bg-white/3">
-        <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-[160px]">
+      <header className="fixed top-0 z-[500] w-full bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <nav aria-label="Global" className="flex items-center justify-between p-4 md:p-6 lg:px-[120px]">
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <img
-                alt=""
+                alt="Logo"
                 src={logo}
-                className="h-8 w-auto"
+                className="h-8 md:h-10 w-auto"
               />
             </a>
           </div>
@@ -138,52 +138,38 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 hover:bg-gray-100 transition-colors"
             >
               <span className="sr-only">Open main menu</span>
               <Bars3Icon aria-hidden="true" className="size-6" />
             </button>
           </div>
-          {/* <div className="hidden lg:flex lg:gap-x-12">
-            {navigation.map((item) => (
-              <a key={item.name} href={item.href} className="text-sm/6 font-semibold text-gray-900">
-                {item.name}
-              </a>
-            ))}
-          </div> */}
-               <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center gap-4">
-                {/* <Link to="/auth/signup" className="text-sm font-semibold text-gray-900">
-                      <a className="text-sm font-semibold text-gray-900">
-                        Log in
-                      </a>
-                </Link> */}
-                    
-                    <button
-                     onClick={() => setIsOpenModal(true)}
-                            type="button"
-                            className="text-50 font-500 text-[#404040] inline-flex items-center justify-center rounded-[13px] bg-gray-200 px-4 py-2 shadow-xs duration-300 ease-in hover:bg-black hover:text-white md:ml-4"
-                        >
-                           {/* Sign Up */}
-                           Join The waitlist
-                        </button>
-                    </div>
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center gap-4">
+            <button
+              onClick={() => setIsOpenModal(true)}
+              type="button"
+              className="px-6 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 rounded-full hover:bg-black hover:text-white transition-all duration-300"
+            >
+              Join The Waitlist
+            </button>
+          </div>
         </nav>
         <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
-          <div className="fixed inset-0 z-50" />
+          <div className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm" />
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your Company</span>
                 <img
-                  alt=""
-                 src={logo}
+                  alt="Logo"
+                  src={logo}
                   className="h-8 w-auto"
                 />
               </a>
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="-m-2.5 rounded-md p-2.5 text-gray-700"
+                className="-m-2.5 rounded-md p-2.5 text-gray-700 hover:bg-gray-100 transition-colors"
               >
                 <span className="sr-only">Close menu</span>
                 <XMarkIcon aria-hidden="true" className="size-6" />
@@ -191,35 +177,28 @@ export default function Home() {
             </div>
             <div className="mt-6 flow-root">
               <div className="-my-6 divide-y divide-gray-500/10">
-                <div className="space-y-2 py-6">
+                <div className="space-y-4 py-6">
                   {navigation.map((item) => (
                     <a
                       key={item.name}
                       href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
                     >
                       {item.name}
                     </a>
                   ))}
                 </div>
                 <div className="py-6">
-                   {/* <a href="/auth/signup" className="text-sm font-semibold text-gray-900">
-    Log in <span aria-hidden="true">&rarr;</span>
-  </a>
-   <button
-        type="button"
-        className="rounded-md bg-[#666666] px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-[#666666]"
-      >
-        Button text
-      </button> */}
-        <button
-         onClick={() => setIsOpenModal(true)}
-                            type="button"
-                            className="text-50 font-500 text-[#404040] inline-flex items-center justify-center rounded-[13px] bg-gray-200 px-4 py-2 shadow-xs duration-300 ease-in hover:bg-black hover:text-white md:ml-4"
-                        >
-                           {/* Sign Up */}
-                           Join The waitlist
-                        </button>
+                  <button
+                    onClick={() => {
+                      setIsOpenModal(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    type="button"
+                    className="w-full px-6 py-3 text-base font-semibold text-white bg-black rounded-xl shadow-lg hover:bg-gray-800 transition-all"
+                  >
+                    Join The Waitlist
+                  </button>
                 </div>
               </div>
             </div>
@@ -227,51 +206,54 @@ export default function Home() {
         </Dialog>
       </header>
 
-       {/* Modal Overlay */}
-       {isOpenModal && (
+      {/* Modal Overlay */}
+      {isOpenModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/40"
+          className="fixed inset-0 z-[600] flex items-center justify-center p-4"
           onClick={() => setIsOpenModal(false)}
         >
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
           <div
-            className="bg-white rounded-2xl shadow-lg p-6 w-[90%] max-w-md mx-auto text-center relative"
+            className="bg-white rounded-3xl shadow-2xl p-6 md:p-10 w-full max-w-md relative animate-in fade-in zoom-in duration-300"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <button
               onClick={() => setIsOpenModal(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all"
             >
-              ✕
+              <XMarkIcon className="size-5" />
             </button>
 
-            <h2 className="text-2xl font-semibold mb-3">Join Our Waitlist</h2>
-            <p className="text-gray-600 mb-6 text-sm">
-              Be the first to know when <strong>StudyBuddy</strong> launches! Sign up below.
-            </p>
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Join Our Waitlist</h2>
+              <p className="text-gray-500 text-sm md:text-base">
+                Be the first to know when <strong>StudyBuddy</strong> launches!
+              </p>
+            </div>
 
-            {/* Waitlist Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="text"
                 placeholder="Your Name"
+                required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="focus:ring-opacity-20 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm transition-colors outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm transition-all outline-none focus:border-black focus:ring-4 focus:ring-black/5"
               />
 
               <input
                 type="email"
                 placeholder="Your Email"
+                required
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="focus:ring-opacity-20 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm transition-colors outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm transition-all outline-none focus:border-black focus:ring-4 focus:ring-black/5"
               />
 
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-block rounded-full bg-gradient-to-r from-[#CD2574] to-[#E46708] w-full py-4 font-medium text-white shadow-sm hover:from-[#E46708] hover:to-[#CD2574] focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-gray-900 focus:outline-none text-lg"
+                className="w-full rounded-2xl bg-gradient-to-r from-[#CD2574] to-[#E46708] py-4 font-bold text-white shadow-xl shadow-orange-500/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-70 disabled:hover:scale-100 text-lg"
               >
                 {loading ? "Joining..." : "Join Waitlist"}
               </button>
@@ -280,52 +262,48 @@ export default function Home() {
         </div>
       )}
 
-                       <section className="pt-40">
-  <div className="container mx-auto px-4 ">
-    <div className="flex justify-center">
-      <div className="relative rounded-[50px] bg-white p-8 lg:py-16 w-full max-w-[1500px]">
-        <div className="mx-auto max-w-[850px] py-20">
-        <div className="flex flex-col items-center text-center">
-          {/* <h1 className="text-600 font-500 mb-4 leading-[1.3] text-black md:leading-[1.1] lg:text-[3rem]">
-            Events Worth Your Time With{" "}
-            <span className="font-700 text-left text-black">Centrl</span>
-          </h1> */}
-          <h1 className="text-6xl font-semibold tracking-tight text-balance text-[#000000] sm:text-8xl mb-6">
-        Study{' '}
-        <span className="typewriter-text">
-          {text}
-          <span className="cursor text-md">|</span>
-        </span>
-      </h1>
-          <p className=" text-lg text-black max-w-2xl">
-            Achieve your academic goals with learning paths,interactive
-          </p>
-          <p className="mb-8 text-lg text-black max-w-2xl">
-             content, and real-time feedback with Edgio
-          </p>
-          <a
-            className="inline-block rounded-full bg-gradient-to-r from-[#CD2574] to-[#E46708] px-12 py-4 font-medium text-[white] shadow-sm hover:from-[#E46708] hover:to-[#CD2574] focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-gray-900 focus:outline-none text-lg"
-            href="/auth/signin"
-          >
-            Get Started
-          </a>
+      <section className="pt-24 md:pt-32 lg:pt-40 pb-12 md:pb-20">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex justify-center">
+            <div className="relative rounded-[32px] md:rounded-[50px] bg-white p-6 md:p-12 lg:py-20 w-full max-w-7xl shadow-xl shadow-gray-200/50">
+              <div className="mx-auto max-w-4xl text-center py-10 md:py-16">
+                <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-gray-900 mb-8 leading-[1.1]">
+                  Study{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#CD2574] to-[#E46708]">
+                    {text}
+                  </span>
+                  <span className="animate-pulse ml-1">|</span>
+                </h1>
+                <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-10">
+                  Achieve your academic goals with learning paths, interactive content, and real-time feedback with Edgio.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <a
+                    className="w-full sm:w-auto inline-block rounded-full bg-gradient-to-r from-[#CD2574] to-[#E46708] px-10 py-4 font-bold text-white shadow-lg shadow-orange-500/25 hover:scale-105 active:scale-95 transition-all text-lg"
+                    href="/auth/signin"
+                  >
+                    Get Started
+                  </a>
+                  <button
+                    onClick={() => setIsOpenModal(true)}
+                    className="w-full sm:w-auto px-10 py-4 font-semibold text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200 transition-all text-lg"
+                  >
+                    Watch Demo
+                  </button>
+                </div>
+              </div>
+              <img
+                alt="AI bot"
+                loading="lazy"
+                width={80}
+                height={80}
+                className="absolute -right-4 -bottom-4 md:right-8 md:bottom-8 w-16 h-16 md:w-24 md:h-24 drop-shadow-2xl animate-bounce-slow"
+                src={AI}
+              />
+            </div>
+          </div>
         </div>
-      </div>
-        <img
-          alt="Star Icon"
-          loading="lazy"
-          width={50}
-          height={50}
-          decoding="async"
-          data-nimg={1}
-          className="absolute right-4 bottom-4"
-          src={AI}
-          style={{ color: "transparent" }}
-        />
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
       <div className="relative isolate px-6 pt-14 lg:px-8">
         <div
           aria-hidden="true"
